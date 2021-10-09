@@ -3,6 +3,7 @@ package com.lwclick.service;
 import com.lwclick.entity.ComputerPlayer;
 import com.lwclick.entity.Judge;
 import com.lwclick.entity.UserPlayer;
+import com.lwclick.utils.CheckNumberException;
 import com.lwclick.utils.Constants;
 
 /**
@@ -29,10 +30,22 @@ public class GuessGame implements GameInterface{
     public void startGame() {
         while (true) {
             System.out.println("==========第" + gameCount + "局=============");
-            int userVal = userPlayer.getInputValue();
+            int userVal = 0;
+            try {
+                userVal = userPlayer.getInputValue();
+            } catch (CheckNumberException e) {
+                e.printStackTrace();
+            }
             int computerVal = computerPlayer.getInputValue();
-            System.out.println(userPlayer.getName() + ": " + Constants.NAMES[userVal] + "  VS  "
-                    + Constants.NAMES[computerVal] + ": " + computerPlayer.getName());
+            if (userVal > Constants.CLOTH) {
+                throw new CheckNumberException("请正确输入数字！无法识别 " + userVal + " 对应的手势");
+            }
+            try {
+                System.out.println(userPlayer.getName() + ": " + Constants.NAMES[userVal] + "  VS  "
+                        + Constants.NAMES[computerVal] + ": " + computerPlayer.getName());
+            } catch (CheckNumberException e) {
+                e.printStackTrace();
+            }
             int judgeWin = judge.judgeWin(userVal, computerVal);
             modifyWinCount(judgeWin);
             printResult();

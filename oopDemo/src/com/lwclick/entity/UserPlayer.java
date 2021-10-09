@@ -1,5 +1,7 @@
 package com.lwclick.entity;
 
+import com.lwclick.utils.CheckNumberException;
+
 import java.util.Scanner;
 
 /**
@@ -18,15 +20,15 @@ public class UserPlayer extends Player{
 
     @Override
     public int getInputValue() {
-        try {
-            System.out.print("玩家请出手（0-石头，1-剪刀，2-布）:  ");
-            Scanner sc = new Scanner(System.in);
-            int val = sc.nextInt();
-            super.setValue(val);
-            return val;
-        } catch (Exception e) {
-            System.err.println("请输入正确的数字！");
-            return 0;
+        System.out.print("玩家请出手（0-石头，1-剪刀，2-布）:  ");
+        int val = 0;
+        Scanner sc = new Scanner(System.in);
+        if (sc.hasNextInt()) {
+            val = sc.nextInt();
+        } else {
+            throw new CheckNumberException("请输入数字");
         }
+        super.setValue(val);
+        return val;
     }
 }
